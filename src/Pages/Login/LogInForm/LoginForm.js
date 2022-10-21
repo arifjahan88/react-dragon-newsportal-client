@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../Contexts/AuthProvider/AuthProvider";
 
 const LoginForm = () => {
   const { logIn } = useContext(AuthContext);
+  const [error, seterror] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const Handleclick = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -16,14 +19,16 @@ const LoginForm = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        seterror("");
         form.reset();
-        navigate("/");
+        navigate(from, { replece: true });
       })
-      .catch((error) => console.error(error));
+      .catch((error) => seterror(error.message));
     console.log(email, password);
   };
   return (
-    <div>
+    <div className="w-75 container mx-auto">
+      <h2 className="text-info">Please LogIn ! !</h2>
       <Form onSubmit={Handleclick}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
@@ -43,13 +48,12 @@ const LoginForm = () => {
             placeholder="Enter your Password"
             required
           />
+
+          <Form.Text className="text-danger">{error}</Form.Text>
         </Form.Group>
         <Button variant="primary" type="submit">
           Log In
         </Button>
-        <Form.Text className="text-danger">
-          We'll never share your email with anyone else.
-        </Form.Text>
       </Form>
     </div>
   );

@@ -41,10 +41,7 @@ const Header = () => {
                 {user?.uid ? (
                   <>
                     <span>{user?.displayName}</span>
-                    <Button
-                      onClick={Hundlelogoutclick}
-                      variant="outline-secondary"
-                    >
+                    <Button className="ms-2" onClick={Hundlelogoutclick}>
                       Log Out
                     </Button>
                   </>
